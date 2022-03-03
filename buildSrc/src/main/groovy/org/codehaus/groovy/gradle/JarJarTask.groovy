@@ -25,6 +25,10 @@ import org.gradle.api.file.FileCollection
 import org.gradle.api.java.archives.Manifest
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
@@ -32,48 +36,42 @@ import org.gradle.api.tasks.TaskAction
 class JarJarTask extends DefaultTask {
     private final static String JARJAR_CLASS_NAME = 'org.pantsbuild.jarjar.JarJarTask'
 
-    String description = "Repackages dependencies into a shaded jar"
+    @Internal final String description = 'Repackages dependencies into a shaded jar'
 
     private List<Action<? super Manifest>> manifestTweaks = []
 
-    @Input
+    @InputFile
     File from
 
-    @Input
+    @InputFiles
     FileCollection repackagedLibraries
 
-    @Input
+    @InputFiles
     FileCollection jarjarToolClasspath
 
-    @Input
-    @org.gradle.api.tasks.Optional
+    @Optional @Input
     List<String> untouchedFiles = []
 
-    @Input
-    @org.gradle.api.tasks.Optional
+    @Optional @Input
     List<String> excludes = []
 
     @Input
     Map<String, String> patterns
 
-    @Input
-    @org.gradle.api.tasks.Optional
+    @Optional @Input
     Map<String, List<String>> excludesPerLibrary = [:]
 
-    @Input
-    @org.gradle.api.tasks.Optional
+    @Optional @Input
     Map<String, List<String>> includesPerLibrary = [:]
 
-    @Input
-    @org.gradle.api.tasks.Optional
+    @Optional @Input
     Map<String, String> includedResources = [:]
 
     @OutputFile
     File outputFile
 
-    @Input
-    @org.gradle.api.tasks.Optional
-    boolean createManifest = true
+    @Optional @Input
+    Boolean createManifest = true
 
     void withManifest(Action<? super Manifest> action) {
         manifestTweaks << action
@@ -164,5 +162,4 @@ class JarJarTask extends DefaultTask {
     private static String baseName(File file) {
         file.name.substring(0, file.name.lastIndexOf('-'))
     }
-
 }

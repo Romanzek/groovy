@@ -17,22 +17,17 @@
  *  under the License.
  */
 dependencies {
-    api("javax.servlet:javax.servlet-api:$servletApiVersion") { dep ->
-        provided dep
-    }
-    api("javax.servlet.jsp:javax.servlet.jsp-api:$jspApiVersion") { dep ->
-        provided dep
+    api rootProject  // ServletBinding extends Binding...
+    api "javax.servlet:javax.servlet-api:$servletApiVersion"
+    api("javax.servlet.jsp:javax.servlet.jsp-api:$jspApiVersion") {
         exclude(group: 'javax.servlet', module: 'javax.servlet-api')
     }
 
-    api rootProject  // ServletBinding extends Binding...
-    // needed for MarkupBuilder
-    implementation project(':groovy-xml')
-    // needed by TemplateServlet
-    implementation project(':groovy-templates')
+    implementation project(':groovy-xml') // for MarkupBuilder
+    implementation project(':groovy-templates') // by TemplateServlet
 
     testImplementation "jmock:jmock:$jmockVersion"
-    testImplementation rootProject.sourceSets.test.runtimeClasspath
     testImplementation project(':groovy-json')
     testImplementation project(':groovy-test')
+    testImplementation rootProject.sourceSets.test.runtimeClasspath
 }
